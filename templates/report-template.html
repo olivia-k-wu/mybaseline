@@ -228,6 +228,30 @@
   .bar-fill.safe { background: #059669; }
   .bar-fill.risk { background: #dc2626; }
 
+  /* Sub headings inside section bodies */
+  h3 { font-size: 16px; margin: 16px 0 8px; color: #1e293b; }
+  h4 { font-size: 14px; margin: 12px 0 6px; color: #475569; }
+
+  /* Risk metric callout */
+  .metric-box {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 12px 0;
+  }
+  .metric-box .metric-name {
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 14px;
+  }
+  .metric-box .metric-explain {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    line-height: 1.6;
+  }
+
   /* Footer */
   .report-footer {
     padding: 16px 24px;
@@ -301,6 +325,14 @@
   <div class="section-heading">📊 组合归因分析</div>
   <div class="section-body">
     {{PORTFOLIO_ANALYSIS}}
+  </div>
+
+  <!-- ═══════════ ④⅓ 组合健康度与风险指标（进阶） ═══════════ -->
+  <div class="section-heading">📐 组合健康度与风险指标（进阶）</div>
+  <div class="section-body">
+    {{RISK_METRICS}}
+    {{CORRELATION_MATRIX}}
+    {{REBALANCE_SUGGESTION}}
   </div>
 
   <!-- ═══════════ ④½ 按银行分布 ═══════════ -->
