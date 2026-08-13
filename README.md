@@ -8,7 +8,7 @@
 
 把它下载到你的 AI 助手，然后对它说：
 
-> **「去 GitHub 下载并安装 https://github.com/olivia-k-wu/mybaseline。帮我分析我的持仓。」**
+> **「去 GitHub 下载并安装olivia-k-wu的mybaseline 帮我分析我的持仓。」**
 
 不管用哪个载体（WorkBuddy / 豆包 MarsCode / Codex），说这一句话即可：它会自动在 GitHub 上找到这个 skill、下载并运行。第一次使用，它会先问几个关于你的问题（风险偏好、投资期限等），友善地引导你上传持仓截图或手动输入，然后拉取实时数据、生成一份穿透式风险分析报告。以后每次分析，都会自动更新你的投资日记和记忆。
 
