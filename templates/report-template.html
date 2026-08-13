@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{REPORT_DATE}} {{TIME_PERIOD}}投资报告</title>
+<style>
+  :root {
+    --bg: #fafafa;
+    --card-bg: #ffffff;
+    --text: #1a1a1a;
+    --text-secondary: #555;
+    --border: #e0e0e0;
+    --accent: #1a56db;
+    --green: #059669;
+    --red: #dc2626;
+    --yellow: #d97706;
+    --heading-bg: #1e293b;
+    --heading-text: #f1f5f9;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 20px;
+  }
+  .report {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  /* Section headings */
+  .section-heading {
+    background: var(--heading-bg);
+    color: var(--heading-text);
+    padding: 14px 24px;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .section-body { padding: 20px 24px; }
+
+  /* Hero / Executive Summary */
+  .hero {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    color: #fff;
+    padding: 32px 24px;
+    text-align: center;
+  }
+  .hero .title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .hero .subtitle {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-bottom: 20px;
+  }
+  .hero .kpi-row {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .hero .kpi {
+    text-align: center;
+  }
+  .hero .kpi .value {
+    font-size: 28px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .hero .kpi .label {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+  .hero .verdict {
+    margin-top: 18px;
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.6;
+  }
+  .positive { color: #34d399; }
+  .negative { color: #f87171; }
+  .neutral { color: #fbbf24; }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 12px 0;
+  }
+  th {
+    background: #f1f5f9;
+    text-align: left;
+    padding: 8px 12px;
+    font-weight: 600;
+    color: #475569;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--border);
+  }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .tag-buy { background: #dcfce7; color: #166534; }
+  .tag-sell { background: #fee2e2; color: #991b1b; }
+  .tag-hold { background: #f1f5f9; color: #475569; }
+  .tag-watch { background: #fef3c7; color: #92400e; }
+
+  /* Lists */
+  ul, ol { padding-left: 20px; }
+  li { margin: 6px 0; }
+
+  /* Action cards */
+  .action-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    border-left: 4px solid var(--accent);
+  }
+  .action-card.sell { border-left-color: var(--red); }
+  .action-card.hold { border-left-color: var(--yellow); }
+  .action-card .action-title {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  .action-card .action-meta {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .action-card .action-reason {
+    font-size: 13px;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+
+  /* Source links */
+  .source-list {
+    font-size: 12px;
+    color: var(--text-secondary);
+    list-style: none;
+    padding-left: 0;
+  }
+  .source-list li { margin: 2px 0; }
+  .source-list a { color: var(--accent); }
+
+  /* Concept box */
+  .concept-box {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 12px 0;
+  }
+  .concept-box .concept-term {
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 14px;
+  }
+  .concept-box .concept-explain {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    line-height: 1.6;
+  }
+
+  /* Bar chart simple */
+  .bar-row {
+    display: flex;
+    align-items: center;
+    margin: 6px 0;
+    font-size: 13px;
+  }
+  .bar-label {
+    width: 110px;
+    flex-shrink: 0;
+    text-align: right;
+    padding-right: 8px;
+    color: var(--text-secondary);
+  }
+  .bar-track {
+    flex: 1;
+    background: #f1f5f9;
+    border-radius: 3px;
+    height: 18px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    padding-left: 6px;
+    font-size: 11px;
+    color: #fff;
+    font-weight: 500;
+  }
+  .bar-fill.safe { background: #059669; }
+  .bar-fill.risk { background: #dc2626; }
+
+  /* Footer */
+  .report-footer {
+    padding: 16px 24px;
+    font-size: 11px;
+    color: #94a3b8;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    line-height: 1.8;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 8px; }
+    .hero { padding: 20px 16px; }
+    .hero .kpi-row { gap: 16px; }
+    .hero .kpi .value { font-size: 22px; }
+    .section-body { padding: 14px 16px; }
+    .bar-label { width: 80px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="report">
+
+  <!-- ═══════════ ① 执行摘要 ═══════════ -->
+  <div class="hero">
+    <div class="title">{{REPORT_DATE}} {{TIME_PERIOD}}投资报告</div>
+    <div class="subtitle">{{MARKET_SUMMARY}}</div>
+    <div class="kpi-row">
+      <div class="kpi">
+        <div class="value">{{TOTAL_ASSETS}}</div>
+        <div class="label">总市值（元）</div>
+      </div>
+      <div class="kpi">
+        <div class="value {{TOTAL_PL_COLOR}}">{{TOTAL_PL}}</div>
+        <div class="label">累计盈亏（元）</div>
+      </div>
+      <div class="kpi">
+        <div class="value {{TODAY_PL_COLOR}}">{{TODAY_PL}}</div>
+        <div class="label">今日盈亏（元）</div>
+      </div>
+    </div>
+    <div class="verdict">{{EXECUTIVE_VERDICT}}</div>
+  </div>
+
+  <!-- ═══════════ ② 宏观市场背景 ═══════════ -->
+  <div class="section-heading">📈 宏观市场背景</div>
+  <div class="section-body">
+    {{MARKET_BACKGROUND}}
+  </div>
+
+  <!-- ═══════════ ②½ 近期走势与异动 ═══════════ -->
+  <div class="section-heading">📉 近期走势与异动（近1个月）</div>
+  <div class="section-body">
+    {{RECENT_TRENDS}}
+  </div>
+
+  <!-- ═══════════ ②⅔ 穿透分析 ═══════════ -->
+  <div class="section-heading">🔍 穿透分析（Look-through Analysis）</div>
+  <div class="section-body">
+    {{LOOK_THROUGH}}
+  </div>
+
+  <!-- ═══════════ ③ 专业市场研究 ═══════════ -->
+  <div class="section-heading">🔬 专业市场研究</div>
+  <div class="section-body">
+    {{PROFESSIONAL_RESEARCH}}
+  </div>
+
+  <!-- ═══════════ ④ 组合归因分析 ═══════════ -->
+  <div class="section-heading">📊 组合归因分析</div>
+  <div class="section-body">
+    {{PORTFOLIO_ANALYSIS}}
+  </div>
+
+  <!-- ═══════════ ④½ 按银行分布 ═══════════ -->
+  <div class="section-heading">🏦 按银行/账户分布</div>
+  <div class="section-body">
+    {{BANK_BREAKDOWN}}
+  </div>
+
+  <!-- ═══════════ ⑤ 概念讲解 ═══════════ -->
+  <div class="section-heading">📖 概念讲解</div>
+  <div class="section-body">
+    {{CONCEPT_EXPLANATION}}
+  </div>
+
+  <!-- ═══════════ ⑥ 行动建议 ═══════════ -->
+  <div class="section-heading">🎯 行动建议</div>
+  <div class="section-body">
+    {{ACTION_RECOMMENDATIONS}}
+  </div>
+
+  <!-- Footer -->
+  <div class="report-footer">
+    <strong>免责声明</strong>：本报告由 AI 基于公开数据自动生成，仅供参考，不构成投资建议。<br>
+    投资有风险，决策需谨慎。数据来源：东方财富、公开市场数据。建议咨询持牌顾问后再做决策。<br>
+    生成时间：{{GENERATION_TIME}}（北京时间）| 投资者画像版本：{{PROFILE_VERSION}}
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+# 用户本地数据（从 .template 物化，绝不提交）
+memory/one_pager.md
+memory/memory.md
+memory/investment-diary.md
+memory/portfolio.json
+
+# 生成的报告
+reports/
+
+.DS_Store

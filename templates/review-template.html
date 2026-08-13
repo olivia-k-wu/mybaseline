@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{PERIOD}}复盘报告</title>
+<style>
+  :root { --bg: #fafafa; --card-bg: #fff; --text: #1a1a1a; --text2: #555; --border: #e0e0e0; --accent: #1a56db; --g: #059669; --r: #dc2626; --y: #d97706; --head: #1e293b; --htext: #f1f5f9; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background:var(--bg); color:var(--text); line-height:1.7; padding:20px; }
+  .report { max-width:840px; margin:0 auto; background:var(--card-bg); border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,.08); overflow:hidden; }
+  .sec-head { background:var(--head); color:var(--htext); padding:14px 24px; font-size:17px; font-weight:600; }
+  .sec-body { padding:20px 24px; }
+  .hero { background:linear-gradient(135deg,#1e293b,#334155); color:#fff; padding:32px 24px; text-align:center; }
+  .hero .t { font-size:22px; font-weight:700; margin-bottom:6px; }
+  .hero .st { font-size:13px; opacity:.7; margin-bottom:20px; }
+  .kpis { display:flex; justify-content:center; gap:36px; flex-wrap:wrap; }
+  .kpi { text-align:center; } .kpi .v { font-size:28px; font-weight:700; } .kpi .l { font-size:12px; opacity:.7; margin-top:2px; }
+  .hero .verdict { margin-top:18px; padding:10px 20px; background:rgba(255,255,255,.1); border-radius:6px; font-size:15px; font-weight:500; line-height:1.6; }
+  .pos { color:#34d399; } .neg { color:#f87171; } .warn { color:#fbbf24; }
+  table { width:100%; border-collapse:collapse; font-size:14px; margin:12px 0; }
+  th { background:#f1f5f9; text-align:left; padding:8px 12px; font-weight:600; color:#475569; font-size:12px; text-transform:uppercase; letter-spacing:.5px; border-bottom:2px solid var(--border); }
+  td { padding:8px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tr:last-child td { border-bottom:none; } .n { text-align:right; }
+  .bar { display:flex; align-items:center; margin:6px 0; font-size:13px; }
+  .bar .bl { width:140px; flex-shrink:0; text-align:right; padding-right:8px; color:var(--text2); }
+  .bar .bt { flex:1; background:#f1f5f9; border-radius:3px; height:20px; overflow:hidden; }
+  .bar .bf { height:100%; border-radius:3px; display:flex; align-items:center; padding-left:6px; font-size:11px; color:#fff; font-weight:500; }
+  .bf.pos { background:#059669; } .bf.neg { background:#dc2626; }
+  .alert { padding:14px 18px; margin:12px 0; border-radius:6px; font-size:14px; }
+  .a-r { background:#fef2f2; border:1px solid #fecaca; } .a-r strong { color:#991b1b; }
+  .a-y { background:#fffbeb; border:1px solid #fcd34d; } .a-y strong { color:#92400e; }
+  .a-g { background:#f0fdf4; border:1px solid #bbf7d0; } .a-g strong { color:#166534; }
+  .a-b { background:#eff6ff; border:1px solid #bfdbfe; } .a-b strong { color:#1e40af; }
+  .lesson { border-left:3px solid var(--accent); padding:10px 14px; margin:8px 0; background:#f8fafc; border-radius:0 6px 6px 0; font-size:14px; }
+  .lesson.good { border-left-color:#059669; }
+  .lesson.bad { border-left-color:#dc2626; }
+  h3 { font-size:16px; margin:16px 0 8px; color:#1e293b; } h4 { font-size:14px; margin:12px 0 6px; color:#475569; }
+  .note { font-size:12px; color:#94a3b8; }
+  .footer { padding:16px 24px; font-size:11px; color:#94a3b8; text-align:center; border-top:1px solid var(--border); line-height:1.8; }
+  @media (max-width:600px) { body { padding:8px; } .hero { padding:20px 16px; } .kpis { gap:16px; } .kpi .v { font-size:22px; } .sec-body { padding:14px 16px; } .bl { width:80px; font-size:11px; } }
+</style>
+</head>
+<body>
+<div class="report">
+
+  <!-- ① 盈亏总览 -->
+  <div class="hero">
+    <div class="t">{{PERIOD}}复盘报告</div>
+    <div class="st">{{DATE_RANGE}} | 基准：沪深300 {{BENCHMARK_RETURN}}</div>
+    <div class="kpis">
+      <div class="kpi"><div class="v">{{START_VALUE}}</div><div class="l">期初市值</div></div>
+      <div class="kpi"><div class="v">{{END_VALUE}}</div><div class="l">期末市值</div></div>
+      <div class="kpi"><div class="v {{PL_COLOR}}">{{PERIOD_PL}}</div><div class="l">{{PERIOD}}盈亏</div></div>
+      <div class="kpi"><div class="v {{PL_COLOR}}">{{PERIOD_RETURN}}</div><div class="l">{{PERIOD}}收益率</div></div>
+    </div>
+    <div class="verdict">{{EXECUTIVE_VERDICT}}</div>
+  </div>
+
+  <!-- ② 归因拆解 -->
+  <div class="sec-head">📊 盈亏归因</div>
+  <div class="sec-body">
+    <h3>按资产类型拆分</h3>
+    {{ASSET_TYPE_ATTRIBUTION}}
+
+    <h3>按基金拆分（盈亏贡献 TOP/BOTTOM 5）</h3>
+    {{FUND_ATTRIBUTION}}
+
+    <h3>按银行拆分</h3>
+    {{BANK_ATTRIBUTION}}
+
+    <h3>vs 基准对比</h3>
+    {{BENCHMARK_COMPARISON}}
+  </div>
+
+  <!-- ③ 净值走势 -->
+  <div class="sec-head">📈 净值走势</div>
+  <div class="sec-body">
+    {{NAV_TREND}}
+  </div>
+
+  <!-- ④ 决策回顾 -->
+  <div class="sec-head">📝 本期决策回顾</div>
+  <div class="sec-body">
+    {{DECISION_REVIEW}}
+  </div>
+
+  <!-- ⑤ 经验教训 -->
+  <div class="sec-head">💡 经验教训</div>
+  <div class="sec-body">
+    {{LESSONS_LEARNED}}
+  </div>
+
+  <!-- ⑥ 下期展望 -->
+  <div class="sec-head">🔭 下期展望</div>
+  <div class="sec-body">
+    {{OUTLOOK}}
+  </div>
+
+  <div class="footer">
+    <strong>免责声明</strong>：本复盘报告由 AI 基于公开数据自动生成，仅用于投资策略反思，不构成投资建议。<br>
+    生成时间：{{GENERATION_TIME}}（北京时间）
+  </div>
+
+</div>
+</body>
+</html>

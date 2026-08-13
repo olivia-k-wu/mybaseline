@@ -1,0 +1,4 @@
+interface:
+  display_name: "Baseline 持仓分析方法论"
+  short_description: "基金持仓穿透式风险分析、多维盈亏归因与投资报告框架"
+  default_prompt: "使用 $baseline 分析我的基金持仓：先让我上传持仓截图或告诉你基金代码，然后做穿透式风险分析、多维归因，并生成投资报告。定位为学习/研究方法论，输出不构成投资建议。"

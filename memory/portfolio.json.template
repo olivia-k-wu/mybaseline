@@ -1,0 +1,89 @@
+{
+  "lastUpdated": "YYYY-MM-DD",
+  "funds": [
+    {
+      "fundCode": "000000",
+      "name": "示例·场外基金（替换成你的真实持仓，或删除本条）",
+      "bank": "示例银行",
+      "investmentType": "混合型基金",
+      "account": "普通账户",
+      "shares": 0,
+      "nav": 0,
+      "marketValue": 0,
+      "cost": 0,
+      "holdingGain": 0,
+      "holdingGainRate": 0,
+      "yesterdayGain": 0,
+      "netValueDate": "YYYY-MM-DD",
+      "note": "可选备注：调仓/止盈/加仓等"
+    },
+    {
+      "fundCode": null,
+      "name": "示例·场内 ETF（份额 + 现价/成本价，无 6 位代码）",
+      "bank": "示例券商",
+      "investmentType": "股票型ETF（场内）",
+      "account": "人民币证券账户",
+      "shares": 0,
+      "currentPrice": 0,
+      "costPrice": 0,
+      "marketValue": 0,
+      "holdingGain": 0,
+      "holdingGainRate": 0
+    },
+    {
+      "fundCode": null,
+      "name": "示例·银行理财（issuer + 估算市值）",
+      "bank": "示例银行",
+      "issuer": "示例理财子公司",
+      "investmentType": "银行理财产品（固收类）",
+      "account": "全部账户",
+      "marketValue": 0,
+      "marketValueApprox": true,
+      "holdingGain": 0
+    },
+    {
+      "fundCode": null,
+      "name": "示例·美元理财（currency + exchangeRate）",
+      "bank": "示例银行",
+      "issuer": "示例理财子公司",
+      "investmentType": "银行理财产品（美元/QDII）",
+      "account": "全部账户",
+      "marketValue": 0,
+      "marketValueApprox": true,
+      "holdingGain": 0,
+      "currency": "USD",
+      "exchangeRate": 0,
+      "note": "市值已按汇率换算为人民币"
+    },
+    {
+      "fundCode": "000000",
+      "name": "示例·定投基金（plan + planDetails）",
+      "bank": "示例银行",
+      "investmentType": "指数基金",
+      "account": "普通账户",
+      "plan": "定投",
+      "planDetails": {
+        "type": "regular",
+        "amount": 0,
+        "frequency": "daily",
+        "monthlyEstimate": 0,
+        "status": "active"
+      },
+      "marketValue": 0,
+      "cost": 0,
+      "holdingGain": 0,
+      "holdingGainRate": 0
+    },
+    {
+      "fundCode": null,
+      "name": "示例·已清仓（status 标记，保留记录、市值归零）",
+      "bank": "示例银行",
+      "investmentType": "银行理财产品",
+      "account": "全部账户",
+      "marketValue": 0,
+      "holdingGain": 0,
+      "status": "已清仓",
+      "note": "清仓产品保留记录"
+    }
+  ]
+}
