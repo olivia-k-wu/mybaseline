@@ -222,8 +222,7 @@ $BASELINE_DIR/
 5. **组合体检 7 维度**（模块四）+ **进阶风险指标**（模块五）
 6. **专业市场研究**（模块三）
 7. 生成 HTML 报告（用 `templates/report-template.html`，填充占位符）
-8. **注入水印**：报告 footer 的 `{{WATERMARK}}` 占位符，必须用「水印注入」脚本替换成水印图（见下）
-9. 更新记忆（见「记忆更新协议」）
+8. 更新记忆（见「记忆更新协议」）
 
 ### 早晚盘简报（可选）
 
@@ -333,23 +332,6 @@ $BASELINE_DIR/
 |--------|------|
 | `{{GENERATION_TIME}}` | 生成时刻，格式 `YYYY-MM-DD HH:MM（北京时间）`（时区固定 UTC+8，只出现这一次） |
 | `{{PROFILE_VERSION}}` | 投资者画像版本号（如 `v3`），仅 report 模板 footer 使用 |
-| `{{WATERMARK}}` | 底部水印图，用「水印注入」脚本替换为 base64 内嵌的 `<img>` |
-
-## 水印注入（每次生成报告后必做）
-
-报告 footer 里有 `{{WATERMARK}}` 占位符。生成报告后，**必须**用下面这段脚本把它替换成水印图（base64 内嵌，报告保持自包含，下载 / 分享都不丢图）：
-
-```bash
-python3 - <<'EOF'
-import base64
-b64 = base64.b64encode(open('assets/watermark.jpg','rb').read()).decode()
-wm = '<div style="margin-top:14px;text-align:center;"><img src="data:image/jpeg;base64,' + b64 + '" alt="" style="width:110px;opacity:0.55;border-radius:6px;display:inline-block;"></div>'
-html = open('报告文件路径', encoding='utf-8').read().replace('{{WATERMARK}}', wm)
-open('报告文件路径', 'w', encoding='utf-8').write(html)
-EOF
-```
-
-> 把脚本里的「报告文件路径」替换成实际报告路径（如 `reports/2026-08-13-日报.html`）。这是**脚本操作**，不要把 base64 手抄进报告。
 
 ## 边界与合规（强制）
 

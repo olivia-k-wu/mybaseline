@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{REPORT_DATE}} {{TIME_PERIOD}}投资报告</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #ece5d6;
@@ -46,6 +49,30 @@
     border-bottom: 1px solid var(--border);
   }
   .section-body { padding: 20px 24px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .masthead { margin-bottom: 18px; }
+  .masthead-name {
+    font-family: "Libre Baskerville", Georgia, "Times New Roman", "Songti SC", "STSong", serif;
+    font-size: 46px;
+    font-weight: 700;
+    letter-spacing: 5px;
+    color: #3d362c;
+    line-height: 1.05;
+  }
+  .masthead-rule {
+    border: 0;
+    border-top: 3px solid #3d362c;
+    border-bottom: 1px solid #3d362c;
+    height: 4px;
+    margin: 10px auto 12px;
+    max-width: 480px;
+  }
+  .masthead-tagline {
+    font-family: "Libre Baskerville", Georgia, "Times New Roman", "Songti SC", "STSong", serif;
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: #8a8274;
+    text-transform: uppercase;
+  }
   .hero {
     background: linear-gradient(135deg, #f5efe2 0%, #e8ddc7 100%);
     color: var(--text);
@@ -201,6 +228,11 @@
 
   <!-- ═══════════ ① 执行摘要 ═══════════ -->
   <div class="hero">
+    <div class="masthead">
+      <div class="masthead-name">Baseline</div>
+      <div class="masthead-rule"></div>
+      <div class="masthead-tagline">Portfolio Analysis</div>
+    </div>
     <div class="title">{{REPORT_DATE}} {{TIME_PERIOD}}投资报告</div>
     <div class="subtitle">{{MARKET_SUMMARY}}</div>
     <div class="kpi-row">
@@ -281,7 +313,6 @@
     <strong>免责声明</strong>：本报告由 AI 基于公开数据自动生成，仅供参考，不构成投资建议。<br>
     投资有风险，决策需谨慎。数据来源：东方财富、公开市场数据。建议咨询持牌顾问后再做决策。<br>
     生成时间：{{GENERATION_TIME}}| 投资者画像版本：{{PROFILE_VERSION}}
-    {{WATERMARK}}
   </div>
 
 </div>
