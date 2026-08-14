@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{PERIOD}}复盘报告</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root { --bg:#ece5d6; --card-bg:#faf7f0; --panel:#f3ede0; --text:#3d362c; --text2:#7d7261; --border:#ddd3bd; --accent:#a34b2f; --up:#b0432e; --down:#3c7a58; --amber:#b07a2e; --info:#4a6b8a; --head:#d9caaa; --htext:#3d362c; }
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -11,6 +14,10 @@
   .report { max-width:840px; margin:0 auto; background:var(--card-bg); border-radius:8px; box-shadow:0 1px 3px rgba(61,54,44,.10); overflow:hidden; }
   .sec-head { background:var(--head); color:var(--htext); padding:14px 24px; font-size:17px; font-weight:600; border-bottom:1px solid var(--border); }
   .sec-body { padding:20px 24px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .masthead { margin-bottom:18px; }
+  .masthead-name { font-family:"Libre Baskerville", Georgia, "Times New Roman", "Songti SC", "STSong", serif; font-size:46px; font-weight:700; letter-spacing:5px; color:#3d362c; line-height:1.05; }
+  .masthead-rule { border:0; border-top:3px solid #3d362c; border-bottom:1px solid #3d362c; height:4px; margin:10px auto 12px; max-width:480px; }
+  .masthead-tagline { font-family:"Libre Baskerville", Georgia, "Times New Roman", "Songti SC", "STSong", serif; font-size:10px; letter-spacing:5px; color:#8a8274; text-transform:uppercase; }
   .hero { background:linear-gradient(135deg,#f5efe2,#e8ddc7); color:var(--text); padding:32px 24px; text-align:center; }
   .hero .t { font-size:22px; font-weight:700; margin-bottom:6px; color:#3d362c; }
   .hero .st { font-size:13px; opacity:.72; margin-bottom:20px; }
@@ -46,6 +53,11 @@
 
   <!-- ① 盈亏总览 -->
   <div class="hero">
+    <div class="masthead">
+      <div class="masthead-name">Baseline</div>
+      <div class="masthead-rule"></div>
+      <div class="masthead-tagline">Portfolio Analysis</div>
+    </div>
     <div class="t">{{PERIOD}}复盘报告</div>
     <div class="st">{{DATE_RANGE}} | 基准：沪深300 {{BENCHMARK_RETURN}}</div>
     <div class="kpis">
