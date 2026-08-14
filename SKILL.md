@@ -106,22 +106,32 @@ $BASELINE_DIR/
 
 - 强制北京时间 (UTC+8)。12:00 前 = 上午，12:00 后 = 下午。
 
-## 数据获取（WebFetch 优先，零 MCP 依赖）
+## 数据获取（curl 直调 JSON 接口，零 MCP 依赖）
 
-任何能联网的 agent 都能直接调以下公开接口，**无需任何 API Key、无需配置 MCP**：
+任何能联网的 agent 都能用命令行 `curl` 直接请求以下公开接口，**无需任何 API Key、无需配置 MCP**。这些接口返回的都是 **JSON**，`curl` 拿到的就是干净数据，直接解析字段即可（若环境无 `curl`，可用等价的 HTTP 请求工具直调这些 URL）。
 
-| 用途 | 接口 |
-|------|------|
-| 单基金实时估值 | `https://fundgz.1234567.com.cn/js/{fundCode}.js` |
-| 批量净值/信息 | `https://fundmobapi.eastmoney.com/FundMNewApi/FundMNFInfo?Fcodes={codes}` |
-| 大盘指数 | `https://push2.eastmoney.com/api/qt/ulist.np/get?secids=1.000001,0.399001,0.399006` |
-| 资金流向 | `https://push2.eastmoney.com/api/qt/stock/fflow/kline/get?...` |
-| 北向资金 | `https://push2.eastmoney.com/api/qt/kamt.rtmin/get` |
-| 金价（AU9999，¥/克） | `https://push2delay.eastmoney.com/api/qt/stock/trends2/get?secid=118.AU9999` |
-| 历史净值 | `https://fundmobapi.eastmoney.com/FundMApi/FundNetDiagram.ashx?FCODE={code}&RANGE={range}` |
-| **持仓穿透** | `https://fundmobapi.eastmoney.com/FundMNewApi/FundMNInverstPosition?FCODE={code}&deviceid=Wap&plat=Wap&product=EFund&version=2.0.0` |
+> ⚠️ **禁止用 WebFetch / 网页爬取去抓东方财富的 HTML 页面**（如 `fund.eastmoney.com`、`fundf10.eastmoney.com` 的基金详情 / 历史净值页）——那些是分页 HTML，会一直往下翻、永远抓不完。**只准直调下面的 JSON 接口。**
 
-> 若用户已配置 MCP（如 `cn-funds-mcp`），可优先调用；否则一律用 WebFetch 直调。
+| 用途 | 接口 | 说明 |
+|------|------|------|
+| 单基金实时估值 | `https://fundgz.1234567.com.cn/js/{fundCode}.js` | 返回 JS 包装的 JSON（`jsonpgz(...)`），取内层对象 |
+| 批量净值/信息 | `https://fundmobapi.eastmoney.com/FundMNewApi/FundMNFInfo?Fcodes={codes}` | 逗号分隔多代码 |
+| 大盘指数 | `https://push2.eastmoney.com/api/qt/ulist.np/get?secids=1.000001,0.399001,0.399006` | 三大指数 |
+| 资金流向 | `https://push2.eastmoney.com/api/qt/stock/fflow/kline/get?...` | |
+| 北向资金 | `https://push2.eastmoney.com/api/qt/kamt.rtmin/get` | |
+| 金价（AU9999，¥/克） | `https://push2delay.eastmoney.com/api/qt/stock/trends2/get?secid=118.AU9999` | |
+| 历史净值 | `https://fundmobapi.eastmoney.com/FundMApi/FundNetDiagram.ashx?FCODE={code}&RANGE=y&deviceid=Wap&plat=Wap&product=EFund&version=2.0.0` | 返回最近约 24 个交易日（≈1 个月），字段见下 |
+| **持仓穿透** | `https://fundmobapi.eastmoney.com/FundMNewApi/FundMNInverstPosition?FCODE={code}&deviceid=Wap&plat=Wap&product=EFund&version=2.0.0` | |
+
+**历史净值字段**（`FundNetDiagram` 返回的 `Datas` 数组，每条）：`FSRQ`=净值日期、`DWJZ`=单位净值、`JZZZL`=日涨跌%、`LJJZ`=累计净值。**算区间涨跌只需取区间首日 `DWJZ` 与末日 `DWJZ` 两条即可，不要全量历史。**
+
+> 若用户已配置 MCP（如 `cn-funds-mcp`），可优先调用；否则一律用 `curl` 直调 JSON 接口。
+
+### 抓取边界（强制）
+
+- 历史净值**只取区间首日 + 末日两条**，禁止翻全量历史分页。
+- 单次报告的数据请求**上限 15 次**，超了就用已拿到的数据出报告，宁可缺数据也不无限抓取。
+- 某只基金数据拿不到时，**标 `[数据缺失]` 跳过**，不要反复重试、不要换关键词去爬网页。
 
 ## 核心方法
 
@@ -212,7 +222,8 @@ $BASELINE_DIR/
 5. **组合体检 7 维度**（模块四）+ **进阶风险指标**（模块五）
 6. **专业市场研究**（模块三）
 7. 生成 HTML 报告（用 `templates/report-template.html`，填充占位符）
-8. 更新记忆（见「记忆更新协议」）
+8. **注入水印**：报告 footer 的 `{{WATERMARK}}` 占位符，必须用「水印注入」脚本替换成水印图（见下）
+9. 更新记忆（见「记忆更新协议」）
 
 ### 早晚盘简报（可选）
 
@@ -241,7 +252,7 @@ $BASELINE_DIR/
 
 #### 第二步：拉取区间数据
 
-对每只持仓基金，拉取区间内的净值序列（`FundNetDiagram` 接口，range=m 或 q），截取区间首日和末日净值，计算区间涨跌幅；同时对沪深 300 做同样操作，作为基准对比。
+对每只持仓基金，用 `curl` 调 `FundNetDiagram` 接口（`RANGE=y`）拿净值序列，**截取区间首日与末日两条 `DWJZ`（单位净值）** 计算区间涨跌幅；同时对沪深 300 做同样操作，作为基准对比。只需首末两条，禁止翻全量历史分页。
 
 #### 第三步：多维盈亏归因
 
@@ -322,6 +333,23 @@ $BASELINE_DIR/
 |--------|------|
 | `{{GENERATION_TIME}}` | 生成时刻，格式 `YYYY-MM-DD HH:MM（北京时间）`（时区固定 UTC+8，只出现这一次） |
 | `{{PROFILE_VERSION}}` | 投资者画像版本号（如 `v3`），仅 report 模板 footer 使用 |
+| `{{WATERMARK}}` | 底部水印图，用「水印注入」脚本替换为 base64 内嵌的 `<img>` |
+
+## 水印注入（每次生成报告后必做）
+
+报告 footer 里有 `{{WATERMARK}}` 占位符。生成报告后，**必须**用下面这段脚本把它替换成水印图（base64 内嵌，报告保持自包含，下载 / 分享都不丢图）：
+
+```bash
+python3 - <<'EOF'
+import base64
+b64 = base64.b64encode(open('assets/watermark.jpg','rb').read()).decode()
+wm = '<div style="margin-top:14px;text-align:center;"><img src="data:image/jpeg;base64,' + b64 + '" alt="" style="width:110px;opacity:0.55;border-radius:6px;display:inline-block;"></div>'
+html = open('报告文件路径', encoding='utf-8').read().replace('{{WATERMARK}}', wm)
+open('报告文件路径', 'w', encoding='utf-8').write(html)
+EOF
+```
+
+> 把脚本里的「报告文件路径」替换成实际报告路径（如 `reports/2026-08-13-日报.html`）。这是**脚本操作**，不要把 base64 手抄进报告。
 
 ## 边界与合规（强制）
 
